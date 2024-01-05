@@ -6,6 +6,6 @@ class { 'influxdb':
 }
 
 influxdb::database { 'test':
-    ensure  => present
-  }
+  ensure  => present,
+}
 # EOF

@@ -4,9 +4,9 @@
   "author": "vpgrp",
   "summary": "Puppet module to install, deploy and configure InfluxDB.",
   "license": "ISC",
-  "source": "https://github.com/veepee-puppet/puppet-influxdb",
-  "project_page": "https://github.com/veepee-puppet/puppet-influxdb",
-  "issues_url": "https://github.com/veepee-puppet/puppet-influxdb/issues",
+  "source": "https://github.com/flepoutre/puppet-influxdb",
+  "project_page": "https://github.com/flepoutre/puppet-influxdb",
+  "issues_url": "https://github.com/flepoutre/puppet-influxdb",
   "dependencies": [
     {
       "name": "puppetlabs/apt",
@@ -31,7 +31,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.0.0 <= 7.0.0"
+      "version_requirement": ">= 4.0.0 <= 8.0.0"
     }
   ]
 }

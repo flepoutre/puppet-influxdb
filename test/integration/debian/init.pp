@@ -1,25 +1,25 @@
 # -*- puppet -*-
-if ($::lsbdistid == 'Debian') {
+if ($facts['os']['name'] == 'Debian') {
   class { 'influxdb':
     apt_location => 'http://mirror.vpgrp.io/debian-influxdb',
     package      => true,
-    service      => true
+    service      => true,
   }
 
   influxdb::database { 'test':
-    ensure  => present
+    ensure  => present,
   }
 }
 
-if ($::lsbdistid == 'Ubuntu') {
+if ($facts['os']['name'] == 'Ubuntu') {
   class { 'influxdb':
     apt_location => 'http://mirror.vpgrp.io/ubuntu-influxdb',
     package      => true,
-    service      => true
+    service      => true,
   }
 
   influxdb::database { 'test':
-    ensure  => present
+    ensure  => present,
   }
 }
 # EOF

@@ -1,14 +1,23 @@
 # == Class: influxdb::user
 #
+# @param ensure
+# @param db_user
+# @param passwd
+# @param is_admin
+# @param https_enable
+# @param http_auth_enabled
+# @param admin_username
+# @param admin_password
+#
 define influxdb::user (
   Enum['absent', 'present'] $ensure = present,
-  $db_user                          = $title,
-  $passwd                           = undef,
-  $is_admin                         = false,
-  $https_enable                     = $influxdb::https_enable,
-  $http_auth_enabled                = $influxdb::http_auth_enabled,
-  $admin_username                   = $influxdb::admin_username,
-  $admin_password                   = $influxdb::admin_password
+  String $db_user                   = $title,
+  Optional[String] $passwd          = undef,
+  Boolean $is_admin                 = false,
+  Boolean $https_enable             = $influxdb::https_enable,
+  Boolean $http_auth_enabled        = $influxdb::http_auth_enabled,
+  String $admin_username            = $influxdb::admin_username,
+  Optional[String] $admin_password  = $influxdb::admin_password,
 ) {
   if $https_enable {
     $ssl_opts = '-ssl -unsafeSsl'
@@ -31,7 +40,7 @@ define influxdb::user (
         -execute 'DROP USER \"${db_user}\"'",
       onlyif  => "${cmd} \
         -execute 'SHOW USERS' | tail -n+3 | awk '{print \$1}' |\
-        grep -x ${db_user}"
+        grep -x ${db_user}",
     }
   } elsif ($ensure == 'present') {
     $arg_p = "WITH PASSWORD '${passwd}'"
@@ -46,7 +55,7 @@ define influxdb::user (
         -execute \"CREATE USER \\\"${db_user}\\\" ${arg_p} ${arg_a}\"",
       unless  => "${cmd} \
         -execute 'SHOW USERS' | tail -n+3 | awk '{print \$1}' |\
-        grep -x ${db_user}"
+        grep -x ${db_user}",
     }
   }
 }

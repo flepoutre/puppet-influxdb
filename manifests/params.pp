@@ -14,7 +14,6 @@ class influxdb::params {
   $http_realm                         = 'InfluxDB'
   $http_log_enabled                   = true
   $https_enable                       = false
-  $http_socket_enable                 = false
   $http_bind_socket                   = '/var/run/influxdb.sock'
   $logging_format                     = 'auto'
   $logging_level                      = 'info'
@@ -34,36 +33,35 @@ class influxdb::params {
     '*.app env.service.resource.measurement',
     'server', # default template
   ]
-  $default_retention_duration         = undef
 
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     /(?i:debian|devuan|ubuntu)/: {
       $apt_location              = 'https://repos.influxdata.com/debian'
-      $apt_release               = $::lsbdistcodename
+      $apt_release               = $facts['os']['distro']['codename']
       $apt_repos                 = 'stable'
       $apt_key                   = '05CE15085FC09D18E99EFB22684A14CF2582E0C5'
       $influxdb_package_name     = ['influxdb', 'influxdb-client']
       $influxdb_service_name     = 'influxdb'
-      $influxdb_service_provider = $::operatingsystemmajrelease ? {
+      $influxdb_service_provider = $facts['os']['release']['major'] ? {
         '14.04' => 'debian',
         default => 'systemd'
       }
     }
     /(?i:centos|fedora|redhat)/: {
       $influxdb_package_name = ['influxdb']
-      $influxdb_service_name = $::operatingsystemmajrelease ? {
+      $influxdb_service_name = $facts['os']['release']['major'] ? {
         '6' => 'influxdb',
         '7' => 'influxd',
         '8' => 'influxd'
       }
-      $influxdb_service_provider = $::operatingsystemmajrelease ? {
+      $influxdb_service_provider = $facts['os']['release']['major'] ? {
         '6' => 'redhat',
         '7' => 'systemd',
         '8' => 'systemd'
       }
     }
     default                    : {
-      fail("Module ${module_name} is not supported on ${::operatingsystem}")
+      fail("Module ${module_name} is not supported on ${facts['os']['name']}")
     }
   }
 }

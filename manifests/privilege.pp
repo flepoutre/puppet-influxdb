@@ -1,14 +1,23 @@
 # == Class: influxdb::privilege
 #
+# @param ensure
+# @param db_user
+# @param db_name
+# @param privilege
+# @param https_enable
+# @param http_auth_enabled
+# @param admin_username
+# @param admin_password
+#
 define influxdb::privilege (
   Enum['absent', 'present'] $ensure       = present,
-  $db_user                                = undef,
-  $db_name                                = undef,
+  Optional[String] $db_user               = undef,
+  Optional[String] $db_name               = undef,
   Enum['ALL', 'READ', 'WRITE'] $privilege = 'ALL',
-  $https_enable                           = $influxdb::https_enable,
-  $http_auth_enabled                      = $influxdb::http_auth_enabled,
-  $admin_username                         = $influxdb::admin_username,
-  $admin_password                         = $influxdb::admin_password
+  Boolean $https_enable                   = $influxdb::https_enable,
+  Boolean $http_auth_enabled              = $influxdb::http_auth_enabled,
+  String $admin_username                  = $influxdb::admin_username,
+  Optional[String] $admin_password        = $influxdb::admin_password,
 ) {
   if $https_enable {
     $ssl_opts = '-ssl -unsafeSsl'
@@ -32,7 +41,7 @@ define influxdb::privilege (
       command => "${cmd} \
          -execute 'REVOKE ${privilege} ON \"${db_name}\" TO \"${db_user}\"'",
       onlyif  => "${cmd} \
-        -execute  'SHOW GRANTS FOR \"${db_user}\"' | ${matches}"
+        -execute  'SHOW GRANTS FOR \"${db_user}\"' | ${matches}",
     }
   } elsif ($ensure == 'present') {
     exec { "grant_${privilege}_on_${db_name}_to_${db_user}":
@@ -40,7 +49,7 @@ define influxdb::privilege (
       command => "${cmd} \
         -execute 'GRANT ${privilege} ON \"${db_name}\" TO \"${db_user}\"'",
       unless  => "${cmd} \
-        -execute 'SHOW GRANTS FOR \"${db_user}\"' | ${matches}"
+        -execute 'SHOW GRANTS FOR \"${db_user}\"' | ${matches}",
     }
   }
 }
