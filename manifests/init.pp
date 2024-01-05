@@ -96,15 +96,15 @@ class influxdb (
   }
 
   case $package {
-    true    : { $ensure_package = 'present' }
-    false   : { $ensure_package = 'purged' }
+    'true'    : { $ensure_package = 'present' }
+    'false'   : { $ensure_package = 'purged' }
     'latest'  : { $ensure_package = 'latest' }
     default : { fail('package must be true, false or latest') }
   }
 
   case $service {
-    true    : { $ensure_service = 'running' }
-    false   : { $ensure_service = 'stopped' }
+    'true'    : { $ensure_service = 'running' }
+    'false'   : { $ensure_service = 'stopped' }
     'running' : { $ensure_service = 'running' }
     default : { fail('service must be true, false or running') }
   }
