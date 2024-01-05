@@ -90,8 +90,8 @@ class influxdb (
   Array $graphite_templates                  = $influxdb::params::graphite_templates,
 ) inherits influxdb::params {
   case $split_client_package {
-    true    : { $package_names = $influxdb_package_name }
-    false   : { $package_names = [$influxdb_package_name[0]] }
+    'true'    : { $package_names = $influxdb_package_name }
+    'false'   : { $package_names = [$influxdb_package_name[0]] }
     default : { fail('split_client_package package must be true (if using Debian/Ubuntu distro packages) or false') }
   }
 
